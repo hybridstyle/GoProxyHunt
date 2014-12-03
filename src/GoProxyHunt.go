@@ -44,7 +44,7 @@ func main() {
 
 	m.Get("/ips",IpJson)
 
-	m.RunOnAddr(":10010")
+	m.RunOnAddr(":10086")
 }
 
 func IpJson()string{
