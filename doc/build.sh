@@ -1,7 +1,7 @@
 #!/bin/sh
 
 SPATH=$(cd "$(dirname "$0")"; pwd)
-export GOROOT="/macken/go"
+export GOROOT="/usr/local/go"
 SRCPATH=$SPATH/../src
 export GOPATH=$SPATH/..
 
