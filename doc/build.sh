@@ -1,10 +1,10 @@
 #!/bin/sh
 
-SPATH=$(cd "$(dirname "$0")"; pwd)
 export GOROOT="/usr/local/go"
-SRCPATH=$SPATH/../src
-export GOPATH=$SPATH/..
+GITPATH=/macken/GoProxyHunt
+export GOPATH=$GITPATH
 
-cd $SRCPATH
+cd $GITPATH
 $GOROOT/bin/go build GoProxyHunt.go
 
+#TODO
