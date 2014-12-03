@@ -179,8 +179,8 @@ func checkWorker(){
 
 func pachongWorker(){
 	for {
-//		ips := proxyhunt.GetPaChong()
-		ips := proxyhunt.GetList("http://pachong.org/area/city/name/上海/type/high.html")
+		ips := proxyhunt.GetPaChong()
+//		ips := proxyhunt.GetList("http://pachong.org/area/city/name/上海/type/high.html")
 
 		for _,ip := range ips {
 			checkqueue<-ip.Addr
