@@ -181,7 +181,7 @@ func pachongWorker(){
 	for {
 		ips := proxyhunt.GetPaChong()
 //		ips := proxyhunt.GetList("http://pachong.org/area/city/name/上海/type/high.html")
-
+		fmt.Println("pachong size:",len(ips))
 		for _,ip := range ips {
 			checkqueue<-ip.Addr
 		}
