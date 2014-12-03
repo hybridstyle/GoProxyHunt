@@ -22,8 +22,8 @@ const (
 	checkUrl string    = "http://www.baidu.com"
 	bws string         = "BWS"
 	filename string = "proxydata"
-	cleaninternal int = 1 * 60 * 1000 // 5 minute
-	saveinternal time.Duration = 1 * 60 * 1000 * time.Millisecond //5 min
+	cleaninternal int = 5 * 60 * 1000 // 5 minute
+	saveinternal time.Duration = 8 * 60 * 1000 * time.Millisecond //5 min
 	dataformat string = "%s\t%s\t%d\t%d\t%d"
 )
 var ipmap = make(map[string]proxyhunt.IP)
