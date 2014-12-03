@@ -3,8 +3,8 @@
 SPATH=$(cd "$(dirname "$0")"; pwd)
 export GOROOT="/macken/go"
 SRCPATH=$SPATH/../src
-export GOPATH=$SRCPATH
+export GOPATH=$SPATH/..
 
-
-$GOROOT/bin/go build $SRCPATH/GoProxyHunt.go
+cd $SRCPATH
+$GOROOT/bin/go build GoProxyHunt.go
 
