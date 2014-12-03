@@ -51,7 +51,7 @@ func GetPaChong()[]IP{
 	ips := make([]IP,0)
 	for _,url := range links {
 		tmp := GetList(url)
-		time.Sleep(1*time.Second)
+		time.Sleep(5*time.Second)
 		ips=append(ips,tmp...)
 	}
 	return ips
