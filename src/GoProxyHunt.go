@@ -125,10 +125,10 @@ func saveToFile(){
 	defer file.Close();
 	for _,v := range ipmap{
 		val := fmt.Sprintf(dataformat,v.Addr,v.Ip,v.Port,v.Ctime,v.Utime)
-		fmt.Println(val)
+//		fmt.Println(val)
 		file.Write([]byte(val+"\n"))
 	}
-	fmt.Println("\n")
+//	fmt.Println("\n")
 }
 
 /*
@@ -234,7 +234,7 @@ func checkProxy(proxy string, timeout int) bool {
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		fmt.Printf("checkproxy error %s %s\n", proxy, err)
+//		fmt.Printf("checkproxy error %s %s\n", proxy, err)
 		return false
 	}
 	defer resp.Body.Close()
