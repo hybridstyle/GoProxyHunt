@@ -9,3 +9,8 @@ site list
 ====
 1. http://pachong.org
 
+Usage
+====
+
+use doc/build.sh
+set GOROOT GOPATH
