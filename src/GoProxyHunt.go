@@ -173,6 +173,8 @@ func checkWorker(){
 			}else{
 				delete(ipmap,proxy)
 			}
+
+			delete(checkqueue,proxy)
 		}
 	}
 }
