@@ -128,7 +128,6 @@ func saveToFile() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(currentPath)
 	datafilepath := currentPath + "/" + filename
 	file, err := os.OpenFile(datafilepath, os.O_CREATE|os.O_WRONLY|os.O_SYNC|os.O_TRUNC, 0666)
 
@@ -138,10 +137,8 @@ func saveToFile() {
 	defer file.Close();
 	for _, v := range ipmap {
 		val := fmt.Sprintf(dataformat, v.Addr, v.Ip, v.Port, v.Ctime, v.Utime)
-		//		fmt.Println(val)
 		file.Write([]byte(val + "\n"))
 	}
-	//	fmt.Println("\n")
 }
 
 /*
@@ -233,7 +230,6 @@ func checkProxy(proxy string, timeout int) bool {
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		//		fmt.Printf("checkproxy error %s %s\n", proxy, err)
 		return false
 	}
 	defer resp.Body.Close()
@@ -296,7 +292,7 @@ func letushideWorker() {
 func pachongWorker() {
 	for {
 		ips := proxyhunt.GetPaChong()
-		fmt.Println("pachong size:", len(ips))
+		log.Println("pachong size:", len(ips))
 		addToQueue(ips)
 		time.Sleep(1 * time.Hour)
 	}
@@ -304,7 +300,7 @@ func pachongWorker() {
 func proxycomruWorker() {
 	for {
 		ips := proxyhunt.GetProxyCom()
-		fmt.Println("proxycomru size:", len(ips))
+		log.Println("proxycomru size:", len(ips))
 		addToQueue(ips)
 		time.Sleep(1 * time.Hour)
 	}
