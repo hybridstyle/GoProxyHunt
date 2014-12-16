@@ -266,7 +266,7 @@ func cnproxyWorkder() {
 func freeProxyListWorker() {
 	for {
 		ips := proxyhunt.GetFreeProxyList()
-		log.Println("freeproxysize:", len(ips))
+		log.Println("freeproxy size:", len(ips))
 		addToQueue(ips)
 		time.Sleep(1 * time.Hour)
 	}
