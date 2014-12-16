@@ -160,7 +160,7 @@ func checkWorker() {
 	for {
 		select {
 		case proxy := <-checkqueue:
-			log.Println("check proxy:",proxy)
+
 			if checkProxy(proxy, 10) {
 				now := Now()
 				v, ok := ipmap[proxy]
@@ -173,11 +173,14 @@ func checkWorker() {
 				}
 				ipmap[proxy] = v
 
+				log.Println("proxy ok:",proxy)
+
 			}else {
 				delete(ipmap, proxy)
 			}
 
 			delete(queuemap, proxy)
+			log.Println("proxy fail:",proxy)
 		}
 	}
 }
