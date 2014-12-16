@@ -25,6 +25,7 @@ const (
 	cleaninternal int          = 5 * 60 * 1000                    // 5 minute
 	saveinternal time.Duration = 8 * 60 * 1000 * time.Millisecond //5 min
 	dataformat string          = "%s\t%s\t%d\t%d\t%d"
+	checkWorkerSize            = 10
 )
 
 var ipmap = make(map[string]proxyhunt.IP)
@@ -48,7 +49,7 @@ func main() {
 	go saveWorker()
 	go cleanWorkder()
 
-	for i:=0;i<10;i++{
+	for i := 0; i < checkWorkerSize; i++ {
 		go checkWorker()
 	}
 
@@ -183,14 +184,14 @@ func checkWorker() {
 				}
 				ipmap[proxy] = v
 
-				log.Println("proxy ok:",proxy)
+				log.Println("proxy ok:", proxy)
 
 			}else {
 				delete(ipmap, proxy)
 			}
 
 			delete(queuemap, proxy)
-			log.Println("proxy fail:",proxy)
+			log.Println("proxy fail:", proxy)
 		}
 	}
 }
