@@ -185,10 +185,11 @@ func checkWorker() {
 
 			}else {
 				delete(ipmap, proxy)
+				log.Println("proxy fail:", proxy)
 			}
 
 			delete(queuemap, proxy)
-			log.Println("proxy fail:", proxy)
+
 		}
 	}
 }
