@@ -17,7 +17,6 @@ func GetKuaiDaili() []IP {
 	ips := make([]IP, 0)
 	for i := 1; i <= 10; i++ {
 		link := domainUrl + strconv.Itoa(i)
-		log.Println("crawler ", link)
 		content := GetContent(link)
 
 		if content == "" {

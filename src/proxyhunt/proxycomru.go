@@ -6,7 +6,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"strings"
 	"strconv"
-	"log"
 )
 
 const (
@@ -19,9 +18,7 @@ func GetProxyCom() []IP {
 	for i := 1; i <= count ; i++ {
 
 		link := fmt.Sprintf(urlFormat, i)
-		log.Println("link :", link)
 		content := GetContent(link);
-		//		fmt.Println(content)
 
 		if content == "" {
 			continue

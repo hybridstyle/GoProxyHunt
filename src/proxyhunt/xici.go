@@ -5,7 +5,6 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"fmt"
 	"strconv"
-	"log"
 	"time"
 )
 
@@ -16,7 +15,6 @@ var (
 func GetXiCi() []IP {
 	ips := make([]IP, 0)
 	for _, link := range xiciUrls {
-		log.Println("crawler:", link)
 		content := GetContent(link)
 
 		if content == "" {
