@@ -19,60 +19,62 @@ import (
 )
 
 const (
-	checkUrl string    = "http://www.baidu.com"
-	bws string         = "BWS"
-	filename string = "proxydata"
-	cleaninternal int = 5 * 60 * 1000 // 5 minute
+	checkUrl string            = "http://www.baidu.com"
+	bws string                 = "BWS"
+	filename string            = "proxydata"
+	cleaninternal int          = 5 * 60 * 1000                    // 5 minute
 	saveinternal time.Duration = 8 * 60 * 1000 * time.Millisecond //5 min
-	dataformat string = "%s\t%s\t%d\t%d\t%d"
+	dataformat string          = "%s\t%s\t%d\t%d\t%d"
 )
+
 var ipmap = make(map[string]proxyhunt.IP)
 var queuemap = make(map[string]int)
-var checkqueue = make(chan string,10)
-
+var checkqueue = make(chan string, 10)
 
 func main() {
 
 	loadProxy()//加载代理数据
 
-	go pachongWorker()
+	//	go pachongWorker()
+//	go xiciWorker()
+	go kuaidailiWorker()
 	go checkWorker()
 	go saveWorker()
 	go cleanWorkder()
 
 	m := martini.Classic()
 
-	m.Get("/ips",IpJson)
+	m.Get("/ips", IpJson)
 
 	m.RunOnAddr(":10086")
 }
 
-func IpJson()string{
+func IpJson() string {
 	res := make(map[string]interface{})
-	arr := make([]proxyhunt.IP,0)
-	count:=0
-	for _,v := range ipmap {
+	arr := make([]proxyhunt.IP, 0)
+	count := 0
+	for _, v := range ipmap {
 		count++
-		arr=append(arr,v)
+		arr = append(arr, v)
 	}
-	res["count"]=count
-	res["ips"]=arr
+	res["count"] = count
+	res["ips"] = arr
 
-	tmp ,err :=json.Marshal(res)
+	tmp , err := json.Marshal(res)
 	if err != nil {
 		return "{error}"
 	}
 	return string(tmp)
 }
 
-func loadProxy(){
+func loadProxy() {
 	currentPath, err := os.Getwd()
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	datafilepath := currentPath+"/"+filename
+	datafilepath := currentPath + "/" + filename
 
 	datafile, err := os.Open(datafilepath)
 
@@ -84,12 +86,12 @@ func loadProxy(){
 	scanner := bufio.NewScanner(datafile)
 
 	for scanner.Scan() {
-		var addr,ip string
+		var addr, ip string
 		var port int
-		var ctime,utime int64
-		fmt.Sscanf(scanner.Text(),dataformat,&addr,&ip,&port,&ctime,&utime)
-		p := proxyhunt.IP{Addr:addr,Ip:ip,Port:port,Ctime:ctime,Utime:utime}
-		ipmap[p.Addr]=p
+		var ctime, utime int64
+		fmt.Sscanf(scanner.Text(), dataformat, &addr, &ip, &port, &ctime, &utime)
+		p := proxyhunt.IP{Addr:addr, Ip:ip, Port:port, Ctime:ctime, Utime:utime}
+		ipmap[p.Addr] = p
 	}
 
 
@@ -100,7 +102,7 @@ chan[] proxy to be checked
 map[IP]int64 map saved avaiable proxy
 10 mins save to file
  */
-func saveWorker(){
+func saveWorker() {
 	for {
 		time.Sleep(saveinternal)
 		saveToFile()
@@ -108,41 +110,41 @@ func saveWorker(){
 	}
 }
 
-func saveToFile(){
-	currentPath ,err :=os.Getwd()
+func saveToFile() {
+	currentPath , err := os.Getwd()
 
-	if err!=nil {
+	if err != nil {
 		log.Fatal(err)
 	}
 
 	fmt.Println(currentPath)
-	datafilepath := currentPath+"/"+filename
-	file, err := os.OpenFile(datafilepath,os.O_CREATE|os.O_WRONLY|os.O_SYNC|os.O_TRUNC,0666)
+	datafilepath := currentPath + "/" + filename
+	file, err := os.OpenFile(datafilepath, os.O_CREATE|os.O_WRONLY|os.O_SYNC|os.O_TRUNC, 0666)
 
-	if err != nil{
+	if err != nil {
 		log.Fatal(err)
 	}
 	defer file.Close();
-	for _,v := range ipmap{
-		val := fmt.Sprintf(dataformat,v.Addr,v.Ip,v.Port,v.Ctime,v.Utime)
-//		fmt.Println(val)
-		file.Write([]byte(val+"\n"))
+	for _, v := range ipmap {
+		val := fmt.Sprintf(dataformat, v.Addr, v.Ip, v.Port, v.Ctime, v.Utime)
+		//		fmt.Println(val)
+		file.Write([]byte(val + "\n"))
 	}
-//	fmt.Println("\n")
+	//	fmt.Println("\n")
 }
 
 /*
 get the timeout proxy to check
  */
-func cleanWorkder(){
+func cleanWorkder() {
 	for {
-		time.Sleep(1*time.Minute)
+		time.Sleep(1 * time.Minute)
 		now := Now()
-		for _,v := range ipmap {
+		for _, v := range ipmap {
 			internal := int(now - v.Utime)
 
 			if internal > cleaninternal {
-				_,ok := queuemap[v.Addr]
+				_, ok := queuemap[v.Addr]
 				if !ok {
 					checkqueue<-v.Addr
 				}
@@ -154,52 +156,81 @@ func cleanWorkder(){
 /*
 get proxy from chan and check
  */
-func checkWorker(){
+func checkWorker() {
 	for {
 		select {
-		case proxy:= <-checkqueue:
-			if checkProxy(proxy,10){
+		case proxy := <-checkqueue:
+			log.Println("check proxy:",proxy)
+			if checkProxy(proxy, 10) {
 				now := Now()
-				v,ok := ipmap[proxy]
+				v, ok := ipmap[proxy]
 
 				if ok {
-					v.Utime=now
-				}else{
-					ip,port:=getIpInfo(proxy)
-					v=proxyhunt.IP{Addr:proxy,Ip:ip,Port:port,Ctime:now,Utime:now}
+					v.Utime = now
+				}else {
+					ip, port := getIpInfo(proxy)
+					v = proxyhunt.IP{Addr:proxy, Ip:ip, Port:port, Ctime:now, Utime:now}
 				}
-				ipmap[proxy]=v
+				ipmap[proxy] = v
 
-			}else{
-				delete(ipmap,proxy)
+			}else {
+				delete(ipmap, proxy)
 			}
 
-			delete(queuemap,proxy)
+			delete(queuemap, proxy)
 		}
 	}
 }
 
-func pachongWorker(){
+func pachongWorker() {
 	for {
 		ips := proxyhunt.GetPaChong()
-//		ips := proxyhunt.GetList("http://pachong.org/area/city/name/上海/type/high.html")
-		fmt.Println("pachong size:",len(ips))
-		for _,ip := range ips {
-			_,ok := queuemap[ip.Addr]
+		//		ips := proxyhunt.GetList("http://pachong.org/area/city/name/上海/type/high.html")
+		fmt.Println("pachong size:", len(ips))
+		for _, ip := range ips {
+			_, ok := queuemap[ip.Addr]
 			if !ok {
 				checkqueue<-ip.Addr
 			}
 
 		}
-		time.Sleep(1*time.Hour)
+		time.Sleep(1 * time.Hour)
 	}
 
 }
 
-func getIpInfo(proxy string)(string,int){
-	arr := strings.Split(proxy,":")
-	port,_ := strconv.Atoi(arr[1])
-	return arr[0],port
+func xiciWorker() {
+	for {
+		ips := proxyhunt.GetXiCi()
+
+		for _, ip := range ips {
+			_, ok := queuemap[ip.Addr]
+			if !ok {
+				checkqueue<-ip.Addr
+			}
+		}
+		time.Sleep(2 * time.Hour)
+	}
+}
+
+func kuaidailiWorker() {
+	for {
+		ips := proxyhunt.GetKuaiDaili()
+
+		for _, ip := range ips {
+			_, ok := queuemap[ip.Addr]
+			if !ok {
+				checkqueue<-ip.Addr
+			}
+		}
+		time.Sleep(1 * time.Hour)
+	}
+}
+
+func getIpInfo(proxy string) (string, int) {
+	arr := strings.Split(proxy, ":")
+	port, _ := strconv.Atoi(arr[1])
+	return arr[0], port
 }
 
 
@@ -234,7 +265,7 @@ func checkProxy(proxy string, timeout int) bool {
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-//		fmt.Printf("checkproxy error %s %s\n", proxy, err)
+		//		fmt.Printf("checkproxy error %s %s\n", proxy, err)
 		return false
 	}
 	defer resp.Body.Close()
@@ -253,7 +284,7 @@ func checkProxy(proxy string, timeout int) bool {
 }
 
 
-func Now() int64{
+func Now() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
