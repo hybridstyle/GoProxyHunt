@@ -37,7 +37,7 @@ func main() {
 
 	//	go pachongWorker()
 //	go xiciWorker()
-	go kuaidailiWorker()
+	go KuaidailiWorker()
 
 //	go checkWorker()
 	go saveWorker()
@@ -191,15 +191,11 @@ func checkWorker() {
 }
 
 
-
-
 func getIpInfo(proxy string) (string, int) {
 	arr := strings.Split(proxy, ":")
 	port, _ := strconv.Atoi(arr[1])
 	return arr[0], port
 }
-
-
 
 func checkProxy(proxy string, timeout int) bool {
 	proxyUrl, err := url.Parse("http://" + proxy)
@@ -252,5 +248,77 @@ func checkProxy(proxy string, timeout int) bool {
 
 func Now() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
+}
+
+
+func cnproxyWorkder() {
+	for {
+		ips := proxyhunt.GetCnProxy()
+		log.Println("cnproxy size:", len(ips))
+		addToQueue(ips)
+		time.Sleep(1 * time.Hour)
+	}
+}
+
+func freeProxyListWorker() {
+	for {
+		ips := proxyhunt.GetFreeProxyList()
+		log.Println("freeproxysize:", len(ips))
+		addToQueue(ips)
+		time.Sleep(1 * time.Hour)
+	}
+}
+
+func KuaidailiWorker() {
+	for {
+		ips := proxyhunt.GetKuaiDaili()
+		log.Println("kuaidali size:", len(ips))
+		addToQueue(ips)
+		time.Sleep(1 * time.Hour)
+	}
+}
+
+func letushideWorker() {
+	for {
+		ips := proxyhunt.GetLetUsShide()
+		log.Println("letushide size:", len(ips))
+		addToQueue(ips)
+		time.Sleep(1 * time.Hour)
+	}
+}
+
+func pachongWorker() {
+	for {
+		ips := proxyhunt.GetPaChong()
+		fmt.Println("pachong size:", len(ips))
+		addToQueue(ips)
+		time.Sleep(1 * time.Hour)
+	}
+}
+func proxycomruWorker() {
+	for {
+		ips := proxyhunt.GetProxyCom()
+		fmt.Println("proxycomru size:", len(ips))
+		addToQueue(ips)
+		time.Sleep(1 * time.Hour)
+	}
+}
+
+func xiciWorker() {
+	for {
+		ips := proxyhunt.GetXiCi()
+		log.Println("xici size:", len(ips))
+		addToQueue(ips)
+		time.Sleep(2 * time.Hour)
+	}
+}
+
+func addToQueue(ips []proxyhunt.IP) {
+	for _, ip := range ips {
+		_, ok := queuemap[ip.Addr]
+		if !ok {
+			checkqueue<-ip.Addr
+		}
+	}
 }
 
