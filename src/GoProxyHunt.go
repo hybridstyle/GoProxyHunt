@@ -35,11 +35,16 @@ func main() {
 
 	loadProxy()//加载代理数据
 
-	//	go pachongWorker()
-//	go xiciWorker()
-	go KuaidailiWorker()
+	//crawler workder
+	go cnproxyWorkder()
+	go freeProxyListWorker()
+	go kuaidailiWorker()
+	go letushideWorker()
+	go pachongWorker()
+	go proxycomruWorker()
+	go xiciWorker()
 
-//	go checkWorker()
+
 	go saveWorker()
 	go cleanWorkder()
 
@@ -269,7 +274,7 @@ func freeProxyListWorker() {
 	}
 }
 
-func KuaidailiWorker() {
+func kuaidailiWorker() {
 	for {
 		ips := proxyhunt.GetKuaiDaili()
 		log.Println("kuaidali size:", len(ips))
