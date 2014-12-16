@@ -117,7 +117,6 @@ func saveWorker() {
 	for {
 		time.Sleep(saveinternal)
 		saveToFile()
-
 	}
 }
 
