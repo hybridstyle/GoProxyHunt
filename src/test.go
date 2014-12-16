@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	ips := proxyhunt.GetLetUsShide()
+	ips := proxyhunt.GetCnProxy()
 
 	fmt.Println(len(ips))
 

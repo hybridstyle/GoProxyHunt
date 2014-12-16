@@ -38,9 +38,14 @@ func main() {
 	//	go pachongWorker()
 //	go xiciWorker()
 	go kuaidailiWorker()
-	go checkWorker()
+
+//	go checkWorker()
 	go saveWorker()
 	go cleanWorkder()
+
+	for i:=0;i<10;i++{
+		go checkWorker()
+	}
 
 	m := martini.Classic()
 
@@ -185,50 +190,8 @@ func checkWorker() {
 	}
 }
 
-func pachongWorker() {
-	for {
-		ips := proxyhunt.GetPaChong()
-		//		ips := proxyhunt.GetList("http://pachong.org/area/city/name/上海/type/high.html")
-		fmt.Println("pachong size:", len(ips))
-		for _, ip := range ips {
-			_, ok := queuemap[ip.Addr]
-			if !ok {
-				checkqueue<-ip.Addr
-			}
 
-		}
-		time.Sleep(1 * time.Hour)
-	}
 
-}
-
-func xiciWorker() {
-	for {
-		ips := proxyhunt.GetXiCi()
-
-		for _, ip := range ips {
-			_, ok := queuemap[ip.Addr]
-			if !ok {
-				checkqueue<-ip.Addr
-			}
-		}
-		time.Sleep(2 * time.Hour)
-	}
-}
-
-func kuaidailiWorker() {
-	for {
-		ips := proxyhunt.GetKuaiDaili()
-
-		for _, ip := range ips {
-			_, ok := queuemap[ip.Addr]
-			if !ok {
-				checkqueue<-ip.Addr
-			}
-		}
-		time.Sleep(1 * time.Hour)
-	}
-}
 
 func getIpInfo(proxy string) (string, int) {
 	arr := strings.Split(proxy, ":")
