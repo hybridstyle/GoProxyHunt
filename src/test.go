@@ -6,12 +6,12 @@ import (
 )
 
 func main() {
-	ips := proxyhunt.GetCnProxy()
+	ips := proxyhunt.GetCheckerProxyNet()
 
 	fmt.Println(len(ips))
 
-	for _,ip := range ips {
-		fmt.Printf("%s\n",ip.Addr)
-	}
+//	for _,ip := range ips {
+//		fmt.Printf("%s\n",ip.Addr)
+//	}
 }
 

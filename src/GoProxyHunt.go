@@ -37,6 +37,7 @@ func main() {
 	loadProxy()//加载代理数据
 
 	//crawler workder
+	go checkerProxyNetWorker()
 	go cnproxyWorkder()
 	go freeProxyListWorker()
 	go kuaidailiWorker()
@@ -252,6 +253,14 @@ func Now() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
+func checkerProxyNetWorker(){
+	for {
+		ips := proxyhunt.GetCheckerProxyNet()
+		log.Println("checker proxy net size:",len(ips))
+		addToQueue(ips)
+		time.Sleep(30*time.Minute)
+	}
+}
 
 func cnproxyWorkder() {
 	for {
