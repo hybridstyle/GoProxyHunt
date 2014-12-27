@@ -44,7 +44,7 @@ func GetCheckerProxyNet() []IP {
 			ips = append(ips, res)
 		}else{
 			log.Println(addr,err)
-
+			//TODO:解析此种情况 117.165.167.135:8123 (China)
 		}
 	})
 
