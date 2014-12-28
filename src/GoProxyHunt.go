@@ -253,6 +253,18 @@ func Now() int64 {
 	return time.Now().UnixNano() / int64(time.Millisecond)
 }
 
+func ip82Worker(){
+	for {
+		ips := proxyhunt.Get82IP()
+
+		log.Println("82ip size:",len(ips))
+
+		addToQueue(ips)
+
+		time.Sleep(1*time.Hour)
+	}
+}
+
 func checkerProxyNetWorker(){
 	for {
 		ips := proxyhunt.GetCheckerProxyNet()

@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	ips := proxyhunt.GetCheckerProxyNet()
+	ips := proxyhunt.Get82IP()
 
 	fmt.Println(len(ips))
 
