@@ -128,6 +128,8 @@ func saveToFile() {
 		log.Fatal(err)
 	}
 
+
+
 	datafilepath := currentPath + "/" + filename
 	file, err := os.OpenFile(datafilepath, os.O_CREATE|os.O_WRONLY|os.O_SYNC|os.O_TRUNC, 0666)
 
