@@ -37,6 +37,7 @@ func main() {
 	loadProxy()//加载代理数据
 
 	//crawler workder
+	go ip82Worker()
 	go checkerProxyNetWorker()
 	go cnproxyWorkder()
 	go freeProxyListWorker()
